@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L-PARK T15 Face-Off</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* === BASE STYLES === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        /* Animated Dark Gradient Background */
+        body {
+            background: linear-gradient(-45deg, #0a0a0a, #1a1a1a, #050505, #111111);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* === INTRO SCREEN === */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        #start-btn {
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(45deg, #ff004c, #ff7300);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 0, 76, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        #start-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 76, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 115, 0, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 76, 0.5); }
+        }
+
+        /* === TOURNAMENT DASHBOARD === */
+        .tournament-wrapper {
+            flex: 1; /* Pushes the footer to the bottom */
+        }
+
+        .tournament-info {
+            background: rgba(17, 17, 17, 0.8);
+            padding: 30px 15px;
+            text-align: center;
+            border-bottom: 2px solid #333;
+            position: relative;
+        }
+
+        /* Animated Shining Text for the Title */
+        .tournament-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #ffcc00, #ff6600, #ffcc00);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shine 3s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .intro {
+            font-size: 1rem;
+            color: #aaa;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            line-height: 1.6;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Glassmorphism Info Cards */
+        .info-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 204, 0, 0.2);
+            border-color: rgba(255, 204, 0, 0.5);
+        }
+
+        .info-card h3 {
+            color: #ffcc00;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 8px;
+            text-shadow: 0 0 5px rgba(255, 204, 0, 0.3);
+        }
+
+        .info-card p {
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+            color: #ddd;
+        }
+
+        .info-card strong {
+            color: #fff;
+        }
+
+        .contact-number {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            border-left: 3px solid #ffcc00;
+        }
+
+        /* === ARENA (Side-by-Side Teams) === */
+        .arena {
+            display: flex;
+            width: 100vw; 
+            position: relative;
+            align-items: stretch; 
+        }
+
+        .team {
+            width: 50vw; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 50px 10px; 
+            text-shadow: 0px 2px 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .team-left {
+            background: linear-gradient(135deg, rgba(139,0,0,0.9) 0%, rgba(255,32,32,0.9) 100%);
+            border-right: 1px solid #000;
+            padding-right: 30px; 
+        }
+
+        .team-right {
+            background: linear-gradient(135deg, rgba(184,134,11,0.9) 0%, rgba(255,215,0,0.9) 100%);
+            border-left: 1px solid #000;
+            padding-left: 30px; 
+        }
+
+        /* Floating Logos */
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            overflow: hidden;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .team-left .logo-container {
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .team-right .logo-container {
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .team h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            padding-bottom: 5px;
+            width: 90%;
+            letter-spacing: 1px;
+        }
+
+        /* Interactive Roster List */
+        .roster-list {
+            list-style-position: inside;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            width: 90%;
+            letter-spacing: 1px;
+        }
+
+        .roster-list li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 5px 10px;
+            white-space: nowrap; 
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        /* Slide right on hover/tap */
+        .roster-list li:hover, .roster-list li:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(8px);
+            border-left: 3px solid #fff;
+        }
+
+        .captain {
+            background: rgba(0, 0, 0, 0.6); 
+            font-weight: 700;
+            color: #ffcc00; /* Made the captain stand out in gold */
+            margin-bottom: 8px;
+            text-shadow: none; 
+            border-left: 4px solid #ffcc00 !important;
+        }
+
+        /* Highlight for the 2nd players */
+        .highlight-second {
+            background: rgba(0, 0, 0, 0.4); 
+            font-weight: 600;
+            color: #e0e0e0; 
+            margin-bottom: 8px;
+            text-shadow: none; 
+            border-left: 3px solid #b3b3b3 !important; 
+        }
+
+        /* === THE VS BADGE === */
+        .vs-badge {
+            position: absolute;
+            top: 50%;
+            left: 50vw; 
+            transform: translate(-50%, -50%);
+            width: 70px; 
+            height: 70px;
+            background: radial-gradient(circle, #ffffff, #cccccc);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #000;
+            box-shadow: 0 0 20px #000, inset 0 0 10px #777;
+            border: 4px solid #111;
+            z-index: 50; 
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px #000; }
+            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 35px rgba(0,0,0,0.9); }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px #000; }
+        }
+
+        /* === FOOTER === */
+        .footer {
+            background-color: #050505;
+            color: #777;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            width: 100vw;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 650px) {
+            .tournament-info h1 { font-size: 1.8rem; }
+            .info-card { padding: 15px; }
+            .team-left { padding-right: 25px; }
+            .team-right { padding-left: 25px; }
+            .roster-list { font-size: 0.95rem; }
+            .team h2 { font-size: 1.5rem; }
+            .logo-container { width: 90px; height: 90px; }
+            .vs-badge { width: 55px; height: 55px; font-size: 1.3rem; }
+            .footer { font-size: 0.8rem; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen">
+        <button id="start-btn">Tap to Start Match</button>
+    </div>
+
+    <audio id="bg-music" src="music.mp3" loop></audio>
+
+    <div class="tournament-wrapper">
+        
+        <section class="tournament-info">
+            <h1>🏏 L-PARK T15 TENNIS BALL CRICKET CHAMPIONSHIP 🏏</h1>
+            <p class="tagline">"Smash it out at the park!"</p>
+            <p class="intro">Are you ready to witness the ultimate cricketing battle? Gear up, gather your squad, and get ready to dominate the field. The most awaited T15 Tennis Ball Cricket Tournament is officially here!</p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🏆 Highlights</h3>
+                    <p><strong>Format:</strong> T15 (15 Overs / innings)</p>
+                    <p><strong>Ball Type:</strong> Tennis Ball</p>
+                    <p><strong>Team Limit:</strong> First come, first served</p>
+                </div>
+                <div class="info-card">
+                    <h3>💰 Prizes & Fees</h3>
+                    <p><strong>🥇 Winners:</strong> ₹40</p>
+                    <p><strong>🥈 Runners-Up:</strong> ₹0</p>
+                    <p><strong>💵 Entry Fee:</strong> ₹20 / player</p>
+                </div>
+                <div class="info-card">
+                    <h3>📅 Event Details</h3>
+                    <p><strong>Dates:</strong> June 12th – 14th, 2026</p>
+                    <p><strong>Venue:</strong> L-Park Cricket Ground</p>
+                    <p><strong>Location:</strong> Rourkela, Odisha</p>
+                </div>
+                <div class="info-card">
+                    <h3>📝 Register / Organisers</h3>
+                    <p style="margin-bottom: 12px;">Slots are strictly limited!</p>
+                    <p class="contact-number">📞 <strong>Subham Rout:</strong> <br>+91 63703 47515</p>
+                    <p class="contact-number">📞 <strong>Asmit Samal:</strong> <br>+91 87631 24083</p>
+                    <p class="contact-number">📞 <strong>Jayanshu Sahu:</strong> <br>+91 70083 37962</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="arena">
+            
+            <section class="team team-left">
+                <div class="logo-container">
+                    <img src="logo1.png" alt="RCB Logo">
+                </div>
+                <h2>RCB</h2>
+                
+                <ol class="roster-list">
+                    <li class="captain">Subu (Captain)</li>
+                    <li class="highlight-second">Satyajeet Uncle</li>
+                    <li>Asmit</li>
+                    <li>Shreyash</li>
+                    <li>Nishi</li>
+                    <li>Lucky</li>
+                    <li>Amlan</li>
+                    <li>Cameron</li>
+                    <li>Nandu</li>
+                    <li>Lalit</li>
+                </ol>
+            </section>
+
+            <div class="vs-badge">VS</div>
+
+            <section class="team team-right">
+                <div class="logo-container">
+                    <img src="logo2.png" alt="CSK Logo">
+                </div>
+                <h2>CSK</h2>
+                
+                <ol class="roster-list">
+                    <li class="captain">Yash (Captain)</li>
+                    <li class="highlight-second">Lala</li>
+                    <li>Om</li>
+                    <li>Bapun</li>
+                    <li>Subham</li>
+                    <li>Abhijeet</li>
+                    <li>Suryansh</li>
+                    <li>Sai (s)</li>
+                    <li>Sai (j)</li>
+                    <li>Riku</li>
+                </ol>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="footer">
+        © 2026 L- Park. All Rights Reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const introScreen = document.getElementById('intro-screen');
+            const startBtn = document.getElementById('start-btn');
+            const bgMusic = document.getElementById('bg-music');
+
+            startBtn.addEventListener('click', () => {
+                introScreen.style.opacity = '0';
+                
+                bgMusic.play().catch(error => {
+                    console.log("Audio playback failed: ", error);
+                });
+
+                setTimeout(() => {
+                    introScreen.style.display = 'none';
+                }, 500); 
+            });
+        });
+    </script>
+</body>
+</html>
